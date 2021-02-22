@@ -4,7 +4,13 @@ import CoreNFC
 #endif
 @testable import NFCKit
 
-final class NFCKitTests: XCTestCase {
+public protocol NFCKitTests: XCTestCase {
+    func testObjectConsistency(_ coreSubject: Any, _ kitSubject: Any, line: UInt)
+    func testObjectNameConsistency(_ coreMirror: Mirror, _ kitMirror: Mirror, line: UInt)
+    func testPropertiesConsistency(_ coreMirror: Mirror, _ kitMirror: Mirror, line: UInt)
+}
+
+public extension NFCKitTests {
     func testObjectConsistency(_ coreSubject: Any, _ kitSubject: Any, line: UInt = #line) {
         let coreMirror = Mirror(reflecting: coreSubject)
         let kitMirror = Mirror(reflecting: kitSubject)
