@@ -33,9 +33,9 @@ public extension NFCKitTests {
         
         for coreChild in coreChildren {
             let result = kitChildren.contains { kitChild -> Bool in
-                coreChild.label == kitChild.label
+                coreChild.label == kitChild.label && (coreChild.value as AnyObject) === (kitChild.value as AnyObject)
             }
-            XCTAssertTrue(result, "\(kitMirror.subjectType) has no member \(coreChild.label ?? "nil")", line: line)
+            XCTAssertTrue(result, "\(kitMirror.subjectType) has no member \"\(coreChild.label ?? "nil")\" or the value doesn't match. ", line: line)
         }
     }
 }

@@ -31,3 +31,12 @@ public struct FeliCaPollingResponse {
     /// Data requested by the Request Code
     public var requestData: Data?
 }
+
+#if os(iOS) && !targetEnvironment(macCatalyst)
+@available(iOS 14.0, *)
+public extension CoreNFC.NFCFeliCaPollingResponse {
+    init(from nfcKitInstance: FeliCaPollingResponse) {
+        self.init(manufactureParameter: nfcKitInstance.manufactureParameter, requestData: nfcKitInstance.requestData)
+    }
+}
+#endif

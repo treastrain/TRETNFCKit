@@ -19,9 +19,11 @@ final class FeliCaPollingResponseTests: XCTestCase, NFCKitTests {
             return
         }
         
-        let core = NFCFeliCaPollingResponse(manufactureParameter: Data(), requestData: nil)
+        var core = NFCFeliCaPollingResponse(manufactureParameter: Data(), requestData: nil)
         let kit = FeliCaPollingResponse(from: core)
+        testObjectConsistency(core, kit)
         
+        core = NFCFeliCaPollingResponse(from: kit)
         testObjectConsistency(core, kit)
         #else
         _ = FeliCaPollingResponse(manufactureParameter: Data(), requestData: nil)
