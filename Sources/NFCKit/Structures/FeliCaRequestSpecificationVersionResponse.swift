@@ -41,3 +41,12 @@ public struct FeliCaRequestSpecificationVersionResponse {
     /// Option version.
     public var optionVersion: Data?
 }
+
+#if os(iOS) && !targetEnvironment(macCatalyst)
+@available(iOS 14.0, *)
+public extension CoreNFC.NFCFeliCaRequestSpecificationVersionResponse {
+    init(from nfcKitInstance: FeliCaRequestSpecificationVersionResponse) {
+        self.init(statusFlag1: nfcKitInstance.statusFlag1, statusFlag2: nfcKitInstance.statusFlag2, basicVersion: nfcKitInstance.basicVersion, optionVersion: nfcKitInstance.optionVersion)
+    }
+}
+#endif
