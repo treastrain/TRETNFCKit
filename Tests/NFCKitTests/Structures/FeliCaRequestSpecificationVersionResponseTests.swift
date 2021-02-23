@@ -19,9 +19,11 @@ final class FeliCaRequestSpecificationVersionResponseTests: XCTestCase, NFCKitTe
             return
         }
         
-        let core = NFCFeliCaRequestSpecificationVersionResponse(statusFlag1: 0, statusFlag2: 0, basicVersion: nil, optionVersion: nil)
+        var core = NFCFeliCaRequestSpecificationVersionResponse(statusFlag1: 0, statusFlag2: 0, basicVersion: nil, optionVersion: nil)
         let kit = FeliCaRequestSpecificationVersionResponse(from: core)
+        testObjectConsistency(core, kit)
         
+        core = NFCFeliCaRequestSpecificationVersionResponse(from: kit)
         testObjectConsistency(core, kit)
         #else
         _ = FeliCaRequestSpecificationVersionResponse(statusFlag1: 0, statusFlag2: 0, basicVersion: nil, optionVersion: nil)
