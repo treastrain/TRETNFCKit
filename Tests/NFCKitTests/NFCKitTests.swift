@@ -32,10 +32,25 @@ public extension NFCKitTests {
         let kitChildren = kitMirror.children
         
         for coreChild in coreChildren {
-            let result = kitChildren.contains { kitChild -> Bool in
-                coreChild.label == kitChild.label && (coreChild.value as AnyObject) === (kitChild.value as AnyObject)
+            let coreChildMirror = Mirror(reflecting: coreChild.value)
+            let coreChildValue: AnyObject
+            switch coreChildMirror.displayStyle {
+            #if os(iOS) && !targetEnvironment(macCatalyst)
+            case .enum:
+                switch coreChild.value {
+                case let feliCaEncryptionId as NFCFeliCaEncryptionId:
+                    coreChildValue = feliCaEncryptionId.rawValue as AnyObject
+                default:
+                    fatalError("The processing to rawValue of the enum is not described.")
+                }
+            #endif
+            default:
+                coreChildValue = coreChild.value as AnyObject
             }
-            XCTAssertTrue(result, "\(kitMirror.subjectType) has no member \"\(coreChild.label ?? "nil")\" or the value doesn't match. ", line: line)
+            let result = kitChildren.contains { kitChild -> Bool in
+                coreChild.label == kitChild.label && coreChildValue === (kitChild.value as AnyObject)
+            }
+            XCTAssertTrue(result, "\(kitMirror.subjectType) has no member \"\(coreChild.label ?? "nil")\" or the value doesn't match.", line: line)
         }
     }
 }
