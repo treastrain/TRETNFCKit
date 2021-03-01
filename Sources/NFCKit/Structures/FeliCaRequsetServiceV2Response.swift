@@ -10,8 +10,9 @@ import Foundation
 import CoreNFC
 #endif
 
+/// Response from Request Service V2 command.
 public struct FeliCaRequsetServiceV2Response {
-    public init(statusFlag1: Int, statusFlag2: Int, encryptionIdentifier: NFCFeliCaEncryptionId, nodeKeyVersionListAES: [Data]?, nodeKeyVersionListDES: [Data]?) {
+    public init(statusFlag1: Int, statusFlag2: Int, encryptionIdentifier: FeliCaEncryptionId, nodeKeyVersionListAES: [Data]?, nodeKeyVersionListDES: [Data]?) {
         self.statusFlag1 = statusFlag1
         self.statusFlag2 = statusFlag2
         self.encryptionIdentifier = encryptionIdentifier
@@ -24,7 +25,7 @@ public struct FeliCaRequsetServiceV2Response {
     public init(from coreNFCInstance: CoreNFC.NFCFeliCaRequsetServiceV2Response) {
         self.statusFlag1 = coreNFCInstance.statusFlag1
         self.statusFlag2 = coreNFCInstance.statusFlag2
-        self.encryptionIdentifier = coreNFCInstance.encryptionIdentifier
+        self.encryptionIdentifier = coreNFCInstance.encryptionIdentifier.rawValue
         self.nodeKeyVersionListAES = coreNFCInstance.nodeKeyVersionListAES
         self.nodeKeyVersionListDES = coreNFCInstance.nodeKeyVersionListDES
     }
@@ -37,7 +38,7 @@ public struct FeliCaRequsetServiceV2Response {
     public var statusFlag2: Int
 
     /// Encryption identifier.
-    public var encryptionIdentifier: NFCFeliCaEncryptionId
+    public var encryptionIdentifier: FeliCaEncryptionId
 
     /// Node key version list for AES.
     public var nodeKeyVersionListAES: [Data]?
@@ -50,7 +51,7 @@ public struct FeliCaRequsetServiceV2Response {
 @available(iOS 14.0, *)
 public extension CoreNFC.NFCFeliCaRequsetServiceV2Response {
     init(from nfcKitInstance: FeliCaRequsetServiceV2Response) {
-        self.init(statusFlag1: nfcKitInstance.statusFlag1, statusFlag2: nfcKitInstance.statusFlag2, encryptionIdentifier: nfcKitInstance.encryptionIdentifier, nodeKeyVersionListAES: nfcKitInstance.nodeKeyVersionListAES, nodeKeyVersionListDES: nfcKitInstance.nodeKeyVersionListDES)
+        self.init(statusFlag1: nfcKitInstance.statusFlag1, statusFlag2: nfcKitInstance.statusFlag2, encryptionIdentifier: NFCFeliCaEncryptionId(rawValue: nfcKitInstance.encryptionIdentifier)!, nodeKeyVersionListAES: nfcKitInstance.nodeKeyVersionListAES, nodeKeyVersionListDES: nfcKitInstance.nodeKeyVersionListDES)
     }
 }
 #endif
