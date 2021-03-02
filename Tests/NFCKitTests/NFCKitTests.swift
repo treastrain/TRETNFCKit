@@ -1,41 +1,57 @@
+//
+//  NFCKitTests.swift
+//
+//
+//  Created by treastrain on 2021/02/19.
+//
+
 import XCTest
-#if os(iOS)
-import CoreNFC
-#endif
 @testable import NFCKit
 
 public protocol NFCKitTests: XCTestCase {
-    func testObjectConsistency(_ coreSubject: Any, _ kitSubject: Any, line: UInt)
-    func testObjectNameConsistency(_ coreMirror: Mirror, _ kitMirror: Mirror, line: UInt)
-    func testPropertiesConsistency(_ coreMirror: Mirror, _ kitMirror: Mirror, line: UInt)
+    func testObjectConsistency(_ coreSubject: Any, _ kitSubject: Any, coreChildValueHandler: ((Mirror.Child) -> AnyObject?)?, kitChildValueHandler: ((Mirror.Child) -> AnyObject?)?, file: StaticString, line: UInt)
 }
 
 public extension NFCKitTests {
-    func testObjectConsistency(_ coreSubject: Any, _ kitSubject: Any, line: UInt = #line) {
+    /// Test for consistency between the corresponding objects in Core NFC and NFCKit.
+    /// - Parameters:
+    ///   - coreSubject: A Core NFC object.
+    ///   - kitSubject: A NFCKit object.
+    ///   - coreChildValueHandler: A handler used to retrieve a value from a property on the Core NFC object. If you set this handler `nil`, or return `nil` in the handler, by default it retrieves the object's `Mirror.Child.value`.
+    ///   - kitChildValueHandler: A handler used to retrieve a value from a property on the NFCKit object. If you set this handler `nil`, or return `nil` in the handler, by default it retrieves the object's `Mirror.Child.value`.
+    ///   - file: The file in which the failure occurred. The default is the file name of the test case in which this function was called.
+    ///   - line: The line number on which the failure occurred. The default is the line number on which this function was called.
+    func testObjectConsistency(_ coreSubject: Any, _ kitSubject: Any, coreChildValueHandler: ((Mirror.Child) -> AnyObject?)? = nil, kitChildValueHandler: ((Mirror.Child) -> AnyObject?)? = nil, file: StaticString = #filePath, line: UInt = #line) {
         let coreMirror = Mirror(reflecting: coreSubject)
         let kitMirror = Mirror(reflecting: kitSubject)
         
-        testObjectNameConsistency(coreMirror, kitMirror, line: line)
-        testPropertiesConsistency(coreMirror, kitMirror, line: line)
+        testObjectNameConsistency(coreMirror, kitMirror, file: file, line: line)
+        testPropertiesConsistency(coreMirror, kitMirror, coreChildValueHandler: coreChildValueHandler, kitChildValueHandler: kitChildValueHandler, file: file, line: line)
     }
     
-    func testObjectNameConsistency(_ coreMirror: Mirror, _ kitMirror: Mirror, line: UInt = #line) {
+    private func testObjectNameConsistency(_ coreMirror: Mirror, _ kitMirror: Mirror, file: StaticString = #filePath, line: UInt = #line) {
         let coreObjectName = "\(coreMirror.subjectType)"
         let coreObjectNameWithoutPrefix = coreObjectName.replacingOccurrences(of: "NFC", with: "")
         let kitObjectName = "\(kitMirror.subjectType)"
         
-        XCTAssertEqual(coreObjectNameWithoutPrefix, kitObjectName, "Inconsistent class/struct names: \(coreObjectName) vs. \(kitObjectName)", line: line)
+        XCTAssertEqual(coreObjectNameWithoutPrefix, kitObjectName, "Inconsistent class/struct names: \(coreObjectName) vs. \(kitObjectName)", file: file, line: line)
     }
     
-    func testPropertiesConsistency(_ coreMirror: Mirror, _ kitMirror: Mirror, line: UInt = #line) {
+    private func testPropertiesConsistency(_ coreMirror: Mirror, _ kitMirror: Mirror, coreChildValueHandler: ((Mirror.Child) -> AnyObject?)? = nil, kitChildValueHandler: ((Mirror.Child) -> AnyObject?)? = nil, file: StaticString = #filePath, line: UInt = #line) {
+        let defaultChildValueHandler: ((Mirror.Child) -> AnyObject) = { (child) -> AnyObject in
+            child.value as AnyObject
+        }
+        
         let coreChildren = coreMirror.children
         let kitChildren = kitMirror.children
         
         for coreChild in coreChildren {
+            let coreChildValue = coreChildValueHandler?(coreChild) ?? defaultChildValueHandler(coreChild)
             let result = kitChildren.contains { kitChild -> Bool in
-                coreChild.label == kitChild.label && (coreChild.value as AnyObject) === (kitChild.value as AnyObject)
+                let kitChildValue = kitChildValueHandler?(kitChild) ?? defaultChildValueHandler(kitChild)
+                return coreChild.label == kitChild.label && coreChildValue === kitChildValue
             }
-            XCTAssertTrue(result, "\(kitMirror.subjectType) has no member \"\(coreChild.label ?? "nil")\" or the value doesn't match. ", line: line)
+            XCTAssertTrue(result, "\(kitMirror.subjectType) has no member \"\(coreChild.label ?? "nil")\" or the value doesn't match. ", file: file, line: line)
         }
     }
 }
