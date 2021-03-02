@@ -19,12 +19,21 @@ final class FeliCaRequsetServiceV2ResponseTests: XCTestCase, NFCKitTests {
             return
         }
         
+        let coreChildValueHandler: ((Mirror.Child) -> AnyObject?) = { (coreChild) -> AnyObject? in
+            switch coreChild.value {
+            case let feliCaEncryptionId as NFCFeliCaEncryptionId:
+                return feliCaEncryptionId.rawValue as AnyObject
+            default:
+                return nil
+            }
+        }
+        
         var core = NFCFeliCaRequsetServiceV2Response(statusFlag1: 0, statusFlag2: 0, encryptionIdentifier: .AES, nodeKeyVersionListAES: nil, nodeKeyVersionListDES: nil)
         let kit = FeliCaRequsetServiceV2Response(from: core)
-        testObjectConsistency(core, kit)
+        testObjectConsistency(core, kit, coreChildValueHandler: coreChildValueHandler)
         
         core = NFCFeliCaRequsetServiceV2Response(from: kit)
-        testObjectConsistency(core, kit)
+        testObjectConsistency(core, kit, coreChildValueHandler: coreChildValueHandler)
         #else
         _ = FeliCaRequsetServiceV2Response(statusFlag1: 0, statusFlag2: 0, encryptionIdentifier: .AES, nodeKeyVersionListAES: nil, nodeKeyVersionListDES: nil)
         #endif
