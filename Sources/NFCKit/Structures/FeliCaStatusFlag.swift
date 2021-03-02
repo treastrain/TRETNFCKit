@@ -31,3 +31,12 @@ public struct FeliCaStatusFlag {
     /// Status flag 2.
     public var statusFlag2: Int
 }
+
+#if os(iOS) && !targetEnvironment(macCatalyst)
+@available(iOS 14.0, *)
+public extension CoreNFC.NFCFeliCaStatusFlag {
+    init(from nfcKitInstance: FeliCaStatusFlag) {
+        self.init(statusFlag1: nfcKitInstance.statusFlag1, statusFlag2: nfcKitInstance.statusFlag2)
+    }
+}
+#endif
