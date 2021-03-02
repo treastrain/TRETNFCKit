@@ -12,11 +12,15 @@ import CoreNFC
 @testable import NFCKit
 
 final class FeliCaEncryptionIdTests: XCTestCase, NFCKitTests {
-    #if os(iOS) && !targetEnvironment(macCatalyst)
-    @available(iOS 13.0, *)
     func testFeliCaEncryptionId() throws {
+        #if os(iOS) && !targetEnvironment(macCatalyst)
+        guard #available(iOS 13.0, *) else {
+            XCTFail("There is a problem with the OS version you are testing.")
+            return
+        }
+        
         XCTAssertEqual(CoreNFC.NFCFeliCaEncryptionId.AES.rawValue, FeliCaEncryptionId.AES)
         XCTAssertEqual(CoreNFC.NFCFeliCaEncryptionId.AES_DES.rawValue, FeliCaEncryptionId.AES_DES)
+        #endif
     }
-    #endif
 }
