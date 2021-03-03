@@ -11,7 +11,7 @@ import CoreNFC
 #endif
 
 /// Response of Get Multiple Block Security Status command.
-public struct ISO15693MultipleBlockSecurityStatus {
+public struct ISO15693MultipleBlockSecurityStatus: Codable {
     public init(blockSecurityStatus: [Int]) {
         self.blockSecurityStatus = blockSecurityStatus
     }

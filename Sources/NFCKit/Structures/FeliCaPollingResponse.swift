@@ -11,7 +11,7 @@ import CoreNFC
 #endif
 
 /// Response from Polling command.
-public struct FeliCaPollingResponse {
+public struct FeliCaPollingResponse: Codable {
     public init(manufactureParameter: Data, requestData: Data?) {
         self.manufactureParameter = manufactureParameter
         self.requestData = requestData

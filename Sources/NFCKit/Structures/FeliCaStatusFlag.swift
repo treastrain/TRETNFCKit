@@ -11,7 +11,7 @@ import CoreNFC
 #endif
 
 /// Response status flags.
-public struct FeliCaStatusFlag {
+public struct FeliCaStatusFlag: Codable {
     public init(statusFlag1: Int, statusFlag2: Int) {
         self.statusFlag1 = statusFlag1
         self.statusFlag2 = statusFlag2

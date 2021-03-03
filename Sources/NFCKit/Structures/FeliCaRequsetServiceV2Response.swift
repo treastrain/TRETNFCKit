@@ -11,7 +11,7 @@ import CoreNFC
 #endif
 
 /// Response from Request Service V2 command.
-public struct FeliCaRequsetServiceV2Response {
+public struct FeliCaRequsetServiceV2Response: Codable {
     public init(statusFlag1: Int, statusFlag2: Int, encryptionIdentifier: FeliCaEncryptionId, nodeKeyVersionListAES: [Data]?, nodeKeyVersionListDES: [Data]?) {
         self.statusFlag1 = statusFlag1
         self.statusFlag2 = statusFlag2
