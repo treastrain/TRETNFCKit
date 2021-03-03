@@ -11,7 +11,7 @@ import CoreNFC
 #endif
 
 /// Response from Request Specification Version command.
-public struct FeliCaRequestSpecificationVersionResponse {
+public struct FeliCaRequestSpecificationVersionResponse: Codable {
     public init(statusFlag1: Int, statusFlag2: Int, basicVersion: Data?, optionVersion: Data?) {
         self.statusFlag1 = statusFlag1
         self.statusFlag2 = statusFlag2
