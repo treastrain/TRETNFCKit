@@ -34,7 +34,6 @@ final class ISO15693ResponseFlagTests: XCTestCase, NFCKitTests {
             let kit = ISO15693ResponseFlag(from: core)
             testObjectConsistency(core, kit)
         }
-        
         #endif
     }
 }

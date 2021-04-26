@@ -41,7 +41,13 @@ public struct ISO15693ResponseFlag: OptionSet, Codable {
 
 extension ISO15693ResponseFlag: CaseIterable {
     public static var allCases: [ISO15693ResponseFlag] = [
-        .error, .responseBufferValid, .finalResponse, .protocolExtension, .blockSecurityStatusBit5, .blockSecurityStatusBit6, .waitTimeExtension
+        .error,
+        .responseBufferValid,
+        .finalResponse,
+        .protocolExtension,
+        .blockSecurityStatusBit5,
+        .blockSecurityStatusBit6,
+        .waitTimeExtension,
     ]
 }
 
