@@ -74,7 +74,7 @@ public struct ReaderError: Error, LocalizedError, CustomNSError {
     #if os(iOS) && !targetEnvironment(macCatalyst)
     @available(iOS 11.0, *)
     public init(from coreNFCInstance: CoreNFC.NFCReaderError) {
-        self.code = .init(rawValue: coreNFCInstance.code.rawValue) ?? .kitErrorCoreNFCAndNFCKitErrorCodeConversionFailed
+        self.code = Code(rawValue: coreNFCInstance.code.rawValue) ?? .kitErrorCoreNFCAndNFCKitErrorCodeConversionFailed
         self.errorCode = coreNFCInstance.errorCode
         self.errorUserInfo = coreNFCInstance.errorUserInfo
         self.errorDescription = coreNFCInstance.localizedDescription
