@@ -31,7 +31,9 @@ public extension NFCKitTests {
     
     private func testObjectNameConsistency(_ coreMirror: Mirror, _ kitMirror: Mirror, file: StaticString = #filePath, line: UInt = #line) {
         let coreObjectName = "\(coreMirror.subjectType)"
-        let coreObjectNameWithoutPrefix = coreObjectName.replacingOccurrences(of: "NFC", with: "")
+        let coreObjectNameWithoutPrefix = coreObjectName
+            .replacingOccurrences(of: "NFC", with: "") // Match the object name without the `NFC` prefix in Core NFC with the one in NFCKit.
+            .replacingOccurrences(of: "related decl 'e' for ", with: "") // `NSError` in Core NFC shall not be included in NFCKit.
         let kitObjectName = "\(kitMirror.subjectType)"
         
         XCTAssertEqual(coreObjectNameWithoutPrefix, kitObjectName, "Inconsistent class/struct names: \(coreObjectName) vs. \(kitObjectName)", file: file, line: line)
@@ -46,6 +48,11 @@ public extension NFCKitTests {
         let kitChildren = kitMirror.children
         
         for coreChild in coreChildren {
+            guard coreChild.label != "_nsError" else {
+                // `NSError` in Core NFC shall not be included in NFCKit.
+                XCTAssertTrue(true)
+                continue
+            }
             let coreChildValue = coreChildValueHandler?(coreChild) ?? defaultChildValueHandler(coreChild)
             let result = kitChildren.contains { kitChild -> Bool in
                 let kitChildValue = kitChildValueHandler?(kitChild) ?? defaultChildValueHandler(kitChild)
