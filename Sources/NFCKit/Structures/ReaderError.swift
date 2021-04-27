@@ -138,15 +138,19 @@ extension ReaderError: Equatable {
         return lhs.errorCode == rhs.errorCode
     }
     
+    #if os(iOS) && !targetEnvironment(macCatalyst)
     @available(iOS 11.0, *)
     public static func == (lhs: ReaderError, rhs: CoreNFC.NFCReaderError) -> Bool {
         return lhs.errorCode == rhs.errorCode
     }
+    #endif
     
+    #if os(iOS) && !targetEnvironment(macCatalyst)
     @available(iOS 11.0, *)
     public static func == (lhs: CoreNFC.NFCReaderError, rhs: ReaderError) -> Bool {
         return lhs.errorCode == rhs.errorCode
     }
+    #endif
 }
 
 #if os(iOS) && !targetEnvironment(macCatalyst)
