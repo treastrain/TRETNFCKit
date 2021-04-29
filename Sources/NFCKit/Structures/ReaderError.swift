@@ -12,6 +12,12 @@ import CoreNFC
 
 public let ErrorDomain: String = "TRETNFCKitError"
 
+/// Key in NSError userInfo dictionary.  The corresponding value is the NSUInteger error code from tag's response. Refer to ISO15693 specification for the error code values.
+public let ISO15693TagResponseErrorKey: String = "ISO15693TagResponseErrorCode"
+
+/// Key in NSError userInfo dictionary.  Presence of this key indicates the received response packet length is invalid.
+public let TagResponseUnexpectedLengthErrorKey: String = "TagResponseInvalidLength"
+
 /// Possible errors returned by NFCKit and CoreNFC framework reader session.
 public struct ReaderError: Error, LocalizedError, CustomNSError {
     public enum Code: Int, CaseIterable {
